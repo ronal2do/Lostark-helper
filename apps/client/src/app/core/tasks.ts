@@ -2,7 +2,6 @@ import { createTask } from "../model/lostark-task";
 import { TaskFrequency } from "../model/task-frequency";
 import { TaskScope } from "../model/task-scope";
 
-
 export const tasks = [
   // Daily character
   createTask("Chaos Dungeon", 302, TaskFrequency.DAILY, TaskScope.CHARACTER, 2, 9999, "chaos-dungeon.webp", {
@@ -19,12 +18,14 @@ export const tasks = [
 
   // Daily roster
   createTask("Chaos Gate", 302, TaskFrequency.DAILY, TaskScope.ROSTER, 1, 9999, "chaos_gate.png", {
-    daysFilter: [1, 4, 6, 0]
+    daysFilter: [1, 4, 6, 0],
+    canEditDaysFilter: false,
   }),
   createTask("Anguished Island", 302, TaskFrequency.DAILY, TaskScope.ROSTER, 1, 9999, "anguished.png"),
   createTask("Adventure Island", 302, TaskFrequency.DAILY, TaskScope.ROSTER, 1, 9999, "island.webp"),
   createTask("Procyon Boss", 302, TaskFrequency.DAILY, TaskScope.ROSTER, 1, 9999, "island.webp", {
-    daysFilter: [2, 5, 0]
+    daysFilter: [2, 5, 0],
+    canEditDaysFilter: false,
   }),
   createTask("Affinity Song", 302, TaskFrequency.DAILY, TaskScope.ROSTER, 6, 9999, "rapport.webp"),
   createTask("Affinity Emote", 302, TaskFrequency.DAILY, TaskScope.ROSTER, 6, 9999, "rapport.webp"),
@@ -75,7 +76,7 @@ export const tasks = [
     shared: true,
     partySize: 4
   }),
-  createTask(`Argos`, 1370, TaskFrequency.WEEKLY, TaskScope.CHARACTER, 1, 9999, "abyssal-raid.webp", {
+  createTask(`Argos`, 1370, TaskFrequency.WEEKLY, TaskScope.CHARACTER, 3, 1475, "abyssal-raid.webp", {
     shared: true,
     partySize: 8
   }),
@@ -87,10 +88,27 @@ export const tasks = [
     shared: true,
     partySize: 8
   }),
+  createTask(`Kakul-Saydon`, 1475, TaskFrequency.WEEKLY, TaskScope.CHARACTER, 3, 9999, "legion_raid.png", {
+    shared: true,
+    partySize: 4
+  }),
+  createTask(`Brelshaza Gate 1-2`, 1490, TaskFrequency.WEEKLY, TaskScope.CHARACTER, 2, 9999, "legion_raid.png", {
+    shared: true,
+    partySize: 8
+  }),
+  createTask(`Brelshaza Gate 3-4`, 1500, TaskFrequency.WEEKLY, TaskScope.CHARACTER, 2, 9999, "legion_raid.png", {
+    shared: true,
+    partySize: 8
+  }),
+  createTask(`Brelshaza Gate 5-6`, 1520, TaskFrequency.WEEKLY, TaskScope.CHARACTER, 2, 9999, "legion_raid.png", {
+    shared: true,
+    partySize: 8
+  }),
 
   // Weekly Roster
   createTask(`Ghostship`, 460, TaskFrequency.WEEKLY, TaskScope.ROSTER, 1, 9999, "ghostship.png", {
-    daysFilter: [2, 4, 6]
+    daysFilter: [2, 4, 6],
+    canEditDaysFilter: false
   }),
   createTask(`South Vern Chaos Line Dungeon`, 1340, TaskFrequency.WEEKLY, TaskScope.ROSTER, 2, 9999, "dungeon.webp"),
   createTask("Challenge Guardian", 302, TaskFrequency.WEEKLY, TaskScope.ROSTER, 3, 9999, "guardian.png", {

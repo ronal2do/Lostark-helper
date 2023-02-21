@@ -70,7 +70,9 @@ export class RosterComponent {
         t2BossRush: 0,
         t2Cube: 0,
         t3BossRush: 0,
+        t3BossRushHard: 0,
         t3Cube: 0,
+        t3CubeHard: 0,
         platinumFields: 0
       }
     });
@@ -167,7 +169,7 @@ export class RosterComponent {
 
   importFromLocalStorage(uid: string): void {
     const characters = JSON.parse(localStorage.getItem("roster") || "[]") as Character[];
-    this.rosterService.setOne(uid, { characters, trackedTasks: {} });
+    this.rosterService.setOne(uid, { characters, trackedTasks: {}, showAllTasks: false });
     localStorage.removeItem("roster");
     this.hasLocalstorageRoster = false;
   }

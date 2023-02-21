@@ -107,32 +107,31 @@ export const goldTasks: GoldTask[] = [
 
   // T3 Abyss Raid
   {
-    name: "Argos P1",
+    name: "Argos Gate 1",
     goldReward: 800,
     taskName: "Argos",
     chestPrice: 300,
-    completionId: "T3.1",
-    chestId: "Argos"
+    completionId: "T3.L1.1",
+    overrideMaxIlvl: 1475,
+    chestId: "Argos1"
   },
   {
-    name: "Argos P2",
+    name: "Argos Gate 2",
     goldReward: 900,
     taskName: "Argos",
     chestPrice: 300,
-    completionId: "T3.1",
-    chestId: "Argos",
-    overrideMinIlvl: 1385,
-    canForce: true
+    completionId: "T3.L1.2",
+    chestId: "Argos2",
+    overrideMaxIlvl: 1475,
   },
   {
-    name: "Argos P3",
+    name: "Argos Gate 3",
     goldReward: 1000,
     taskName: "Argos",
     chestPrice: 500,
-    completionId: "T3.1",
-    chestId: "Argos",
-    overrideMinIlvl: 1400,
-    canForce: true
+    completionId: "T3.L1.3",
+    chestId: "Argos3",
+    overrideMaxIlvl: 1475,
   },
 
   // T3 Legion Raid
@@ -225,5 +224,86 @@ export const goldTasks: GoldTask[] = [
     completionId: "T3.L2.3",
     chestId: "Vykas3",
     overrideMinIlvl: 1460
+  },
+  {
+    name: "Kakul-Saydon Gate 1",
+    goldReward: 1000,
+    taskName: "Kakul-Saydon",
+    chestPrice: 800,
+    completionId: "T3.L3.1",
+    chestId: "Kakul1",
+    overrideMinIlvl: 1475
+  },
+  {
+    name: "Kakul-Saydon Gate 2",
+    goldReward: 1000,
+    taskName: "Kakul-Saydon",
+    chestPrice: 1000,
+    completionId: "T3.L3.2",
+    chestId: "Kakul2",
+    overrideMinIlvl: 1475
+  },
+  {
+    name: "Kakul-Saydon Gate 3",
+    goldReward: 2500,
+    taskName: "Kakul-Saydon",
+    chestPrice: 1300,
+    completionId: "T3.L3.3",
+    chestId: "Kakul3",
+    overrideMinIlvl: 1475
+  },
+  {
+    name: "Brelshaza Gate 1",
+    goldReward: 2000,
+    taskName: "Brelshaza Gate 1-2",
+    chestPrice: 400,
+    completionId: "T3.L4.1",
+    chestId: "Brelshaza1",
+    overrideMinIlvl: 1490
+  },
+  {
+    name: "Brelshaza Gate 2",
+    goldReward: 2000,
+    taskName: "Brelshaza Gate 1-2",
+    chestPrice: 400,
+    completionId: "T3.L4.2",
+    chestId: "Brelshaza2",
+    overrideMinIlvl: 1490
+  },
+  {
+    name: "Brelshaza Gate 3",
+    goldReward: 700,
+    taskName: "Brelshaza Gate 3-4",
+    chestPrice: 700,
+    completionId: "T3.L4.3",
+    chestId: "Brelshaza3",
+    overrideMinIlvl: 1500
+  },
+  {
+    name: "Brelshaza Gate 4",
+    goldReward: 800,
+    taskName: "Brelshaza Gate 3-4",
+    chestPrice: 800,
+    completionId: "T3.L4.4",
+    chestId: "Brelshaza4",
+    overrideMinIlvl: 1500
+  },
+  {
+    name: "Brelshaza Gate 5",
+    goldReward: 1000,
+    taskName: "Brelshaza Gate 5-6",
+    chestPrice: 900,
+    completionId: "T3.L4.5",
+    chestId: "Brelshaza5",
+    overrideMinIlvl: 1520
+  },
+  {
+    name: "Brelshaza Gate 6",
+    goldReward: 1500,
+    taskName: "Brelshaza Gate 5-6",
+    chestPrice: 1100,
+    completionId: "T3.L4.6",
+    chestId: "Brelshaza6",
+    overrideMinIlvl: 1520
   }
 ];

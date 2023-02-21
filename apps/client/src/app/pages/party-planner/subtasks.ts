@@ -26,6 +26,7 @@ export const subtasks: Subtask[] = [
   // { ie: `velganosd: , name: `Velganos`, parentName: "Guardian", banner: 'guardians/monster_info_.png', minIlvl: 1400 },
   { id: `deskaluda`, name: `Deskaluda`, parentName: "Guardian", banner: 'guardians/monster_info_27.png', minIlvl: 1415 },
   { id: `kungelanium`, name: `Kungelanium`, parentName: "Guardian", banner: 'guardians/monster_info_28.png', minIlvl: 1460 },
+  { id: `caliligos`, name: `Caliligos`, parentName: "Guardian", banner: 'guardians/monster_info_16.png', minIlvl: 1490 },
 
   // T3 Abyss
   { id: `aira's-oculus-normal`, name: `Aira's Oculus (Normal)`, parentName: "Aira's Oculus", banner: "abyss_dungeons/abyss_dg_09.png", minIlvl: 1325 },
@@ -35,8 +36,8 @@ export const subtasks: Subtask[] = [
 
   // Argos Phases
   { id: `argos-p1`, name: `Argos P1`, parentName: "Argos", banner: "abyss_raids/abyss_02.png", minIlvl: 1370 },
-  { id: `argos-p2`, name: `Argos P2`, parentName: "Argos", banner: "abyss_raids/abyss_02.png", minIlvl: 1385 },
-  { id: `argos-p3`, name: `Argos P3`, parentName: "Argos", banner: "abyss_raids/abyss_02.png", minIlvl: 1400 },
+  { id: `argos-p2`, name: `Argos P2`, parentName: "Argos", banner: "abyss_raids/abyss_02.png", minIlvl: 1370 },
+  { id: `argos-p3`, name: `Argos P3`, parentName: "Argos", banner: "abyss_raids/abyss_02.png", minIlvl: 1370 },
 
   // Valtan Difficulties
   { id: `valtan-normal`, name: `Valtan Normal`, parentName: "Valtan", minIlvl: 1415 },
@@ -44,5 +45,14 @@ export const subtasks: Subtask[] = [
 
   // Vykas Difficulties
   { id: `vykas-normal`, name: `Vykas Normal`, parentName: "Vykas", minIlvl: 1430 },
-  { id: `vykas-hard`, name: `Vykas Hard`, parentName: "Vykas", minIlvl: 1460 }
+  { id: `vykas-hard`, name: `Vykas Hard`, parentName: "Vykas", minIlvl: 1460 },
+  
+  // Kakul Difficulties
+  { id: `kakul-normal`, name: `Kakul-Saydon Normal`, parentName: "Kakul", minIlvl: 1475 },
+  
+  // Brelshaza Difficulties
+  { id: `brelshaza-g12-normal`, name: `Brelshaza G1-G2 Normal`, parentName: "Brelshaza", minIlvl: 1490 },
+  { id: `brelshaza-g34-normal`, name: `Brelshaza G3-G4 Normal`, parentName: "Brelshaza", minIlvl: 1500 },
+  { id: `brelshaza-g56-normal`, name: `Brelshaza G5-G6 Normal`, parentName: "Brelshaza", minIlvl: 1520 }
+  
 ];

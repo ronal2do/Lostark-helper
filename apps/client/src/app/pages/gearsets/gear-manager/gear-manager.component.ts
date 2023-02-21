@@ -19,6 +19,9 @@ import { LostarkClass } from "../../../model/character/lostark-class";
 import { isSameCharacter } from "../../../core/database/character-reference";
 import { Roster } from "../../../model/roster";
 import { NzMessageService } from "ng-zorro-antd/message";
+import { EngravingEntry } from "../../../model/engraving-entry";
+import { LostArkEngraving } from "../../../data/lost-ark-engraving";
+import { GearsetRarity } from "../../../model/gearset-rarity";
 
 const slots = [
   "headgear",
@@ -54,6 +57,7 @@ const statsSlots = [
 })
 export class GearManagerComponent {
 
+  public GearsetRarity = GearsetRarity;
   public ItemRarity = ItemRarity;
   public LostArkStat = LostArkStat;
 
@@ -84,11 +88,14 @@ export class GearManagerComponent {
       const pieces = slots.map(slot => {
         let maxHoning = 15;
         switch (gearset[slot].rarity) {
-          case ItemRarity.LEGENDARY:
+          case GearsetRarity.LEGENDARY:
             maxHoning = 20;
             break;
-          case ItemRarity.RELIC:
+          case GearsetRarity.RELIC:
             maxHoning = 25;
+            break;
+          case GearsetRarity.UPPER_RELIC:
+            maxHoning = 20;
             break;
         }
         return {
@@ -97,7 +104,7 @@ export class GearManagerComponent {
           possibleHonings: new Array(maxHoning)
             .fill(null)
             .map((_, i) => i + 1)
-            .filter(i => i > 5 || gearset[slot].rarity < ItemRarity.LEGENDARY),
+            .filter(i => i > 5 || gearset[slot].rarity < GearsetRarity.LEGENDARY),
           honingCost: this.honingService.getHoningCost(gearset[slot], slot, gearset, pity)
         };
       });
@@ -110,7 +117,11 @@ export class GearManagerComponent {
           return acc + this.honingService.getIlvl({ ...piece.piece, honing: piece.piece.targetHoning });
         }, 0) / 6,
         honingCost: pieces.reduce((acc, piece) => {
-          if (piece.piece.rarity > ItemRarity.EPIC) {
+          if (piece.piece.rarity >= GearsetRarity.UPPER_RELIC) {
+            acc.MVleapstones += piece.honingCost?.leapstones || 0;
+            acc.superiorFusionMaterial += piece.honingCost?.fusionMaterial || 0;
+          }
+          else if (piece.piece.rarity > GearsetRarity.EPIC) {
             acc.GHleapstones += piece.honingCost?.leapstones || 0;
             acc.fusionMaterial += piece.honingCost?.fusionMaterial || 0;
           } else {
@@ -127,6 +138,7 @@ export class GearManagerComponent {
           acc.silver += piece.honingCost?.silver || 0;
           return acc;
         }, {
+          MVleapstones: 0,
           GHleapstones: 0,
           leapstones: 0,
           shards: 0,
@@ -134,6 +146,7 @@ export class GearManagerComponent {
           Wstones: 0,
           gold: 0,
           silver: 0,
+          superiorFusionMaterial: 0,
           fusionMaterial: 0,
           lowFusionMaterial: 0
         })
@@ -144,21 +157,48 @@ export class GearManagerComponent {
   public engravingsDisplay$ = this.gearset$.pipe(
     map(gearset => {
       return engravingsSlots.map(slot => {
-        let maxNodes = new Array(2).fill(gearset[slot]?.rarity + (slot === "stone" ? 5 : -1));
-        if (gearset[slot]?.rarity === ItemRarity.RELIC && slot !== "stone") {
+        const piece = gearset[slot];
+        const isStone = slot === "stone";
+        const isRare = piece.rarity === ItemRarity.RARE;
+        const showNegative = ( !isRare || isStone ) && slot !== "engravings";
+
+        // For Stone: Rare = 6, Epic = 8, Legendary = 9, Relic = 10
+        // For other: Rare = 1, Epic = 2, Legendary = 4
+        const maxNodesBaseCountForStone = isRare ? 1 : piece?.rarity;
+        const maxNodesInitial = isStone ? maxNodesBaseCountForStone + 5 : piece?.rarity + -1;
+
+        const minNodes = isStone ? 0 : 1;
+        let maxNodes = new Array(2).fill(maxNodesInitial);
+
+        // Relic = 5 to one, 3 to another
+        if (piece?.rarity === ItemRarity.RELIC && !isStone) {
           maxNodes = [5, 5];
           const maxBonusIndex = gearset[slot]?.engravings.findIndex(e => e.nodes > 3);
           if (maxBonusIndex > -1) {
             maxNodes[(maxBonusIndex + 1) % 2] = 3;
           }
         }
+
+        // Negative engraving (only applied for +RARE)
+        if (showNegative) {
+          // For Stone: Same than positive engravings
+          // For other: 3
+          maxNodes.push(isStone ? maxNodesInitial : 3);
+
+          // Migrating old data to negative engraving
+          if (piece?.engravings?.length === 2) {
+            piece.engravings.push({ engravingId: 0, nodes: 0 });
+          }
+        }
+
         return {
           slot,
           name: `${slot.slice(0, 1).toUpperCase()}${slot.slice(1).replace(/\d+/, "")}`,
-          piece: gearset[slot],
-          minNodes: slot === "stone" ? 0 : 1,
+          piece,
+          minNodes,
           maxNodes,
-          pieceStatValue: gearset[slot]?.quality > -1 ? getPieceStatValue(slot, gearset[slot].rarity, gearset[slot].quality) : 0
+          pieceStatValue: gearset[slot]?.quality > -1 ? getPieceStatValue(slot, gearset[slot].rarity, gearset[slot].quality) : 0,
+          showNegative
         };
       });
     })
@@ -166,19 +206,18 @@ export class GearManagerComponent {
 
   public engravings$ = this.engravingsService.engravings$;
 
-  public statsDisplay$ = combineLatest([this.gearset$, this.engravings$]).pipe(
+  public allEngravings$ = this.engravingsService.allEngravings$;
+
+  public statsDisplay$ = combineLatest([this.gearset$, this.allEngravings$]).pipe(
     map(([gearset, engravings]) => {
+      const allEngravings = this.engravingsService.getTotalEngravings(gearset)
+        .map(engraving => this.mapEngravingToDisplay(engraving, engravings))
+        .sort((a, b) => b.nodes - a.nodes)
+        .filter(e => e.nodes > 0)
+
       return {
-        engravings: this.engravingsService.getTotalEngravings(gearset).map(engraving => {
-          const data = engravings.find(e => e.id === engraving.engravingId);
-          return {
-            ...engraving,
-            name: data?.name,
-            description: data?.nodes[Math.min(Math.floor(engraving.nodes / 5), 2)],
-            overflow: Math.max(engraving.nodes - 15, 0),
-            level: Math.min(Math.floor(engraving.nodes / 5), 3)
-          };
-        }).sort((a, b) => b.nodes - a.nodes),
+        engravings: allEngravings.filter(e => e.type !== 'negative'),
+        negativeEngravings: allEngravings.filter(e => e.type === 'negative'),
         stats: this.getStatsTotal(gearset)
       };
     })
@@ -188,6 +227,22 @@ export class GearManagerComponent {
               private route: ActivatedRoute, private nzModal: NzModalService, private auth: AuthService,
               private engravingsService: EngravingsService, private message: NzMessageService) {
   }
+
+  private mapEngravingToDisplay(engraving: EngravingEntry, engravings: LostArkEngraving[]) {
+    const data = engravings.find(e => e.id === engraving.engravingId);
+    const level = Math.min(Math.floor(engraving.nodes / 5), 3);
+    const description = data?.nodes?.[ level-1 ] ?? 'No effect';
+
+    return {
+      ...engraving,
+      type: data?.type,
+      name: data?.name,
+      description,
+      overflow: Math.max(engraving.nodes - 15, 0),
+      level
+    };
+  }
+
 
   public saveSet(gearset: Gearset, piece: GearsetPiece, slot: string): void {
     if (piece.targetHoning < piece.honing) {

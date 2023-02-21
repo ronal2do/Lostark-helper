@@ -47,7 +47,8 @@ export class GoldPlannerComponent {
 
   private goldChestRewardPerIlvl = {
     1302: 2 * 1250,
-    1415: 3 * 1250
+    1415: 3 * 1250,
+	1490: 4 * 1250
   };
 
   public display$: Observable<GoldPlannerDisplay> = combineLatest([
@@ -105,7 +106,7 @@ export class GoldPlannerComponent {
             if (cantDoTask || ilvlTooLow || ilvlTooHigh) {
               if (!forceFlag) {
                 return {
-                  force: gTask.canForce ? false : null,
+                  force: gTask.canForce && !ilvlTooHigh ? false : null,
                   value: null
                 };
               }
@@ -235,11 +236,8 @@ export class GoldPlannerComponent {
   }
 
   public setManualGold(settingsKey: string, type: string, characterName: string, newValue: number): void {
-    if (typeof newValue === 'string') {
-      return;
-    }
     this.settings.updateOne(settingsKey, {
-      [`manualGoldEntries.${type}:${characterName}`]: { amount: newValue || 0, timestamp: Date.now() }
+      [`manualGoldEntries.${type}:${characterName}`]: { amount: this.manualGoldFormatter(newValue) || 0, timestamp: Date.now() }
     } as unknown as UpdateData<Settings>);
   }
 
@@ -262,4 +260,12 @@ export class GoldPlannerComponent {
   trackByIndex(index: number): number {
     return index;
   }
+
+  manualGoldFormatter(value: number | string): number {
+    if(!value || typeof value === 'string' ) {
+      return 0;
+    }
+    
+    return Math.floor(value);
+  };
 }

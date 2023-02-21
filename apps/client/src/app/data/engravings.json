@@ -127,7 +127,7 @@
   },
   {
     "id": 142,
-    "name": "Vital Point Strike",
+    "name": "Vital Point Hit",
     "nodes": [
       "Stagger attack effectiveness +6%.",
       "Stagger attack effectiveness +18%.",
@@ -595,7 +595,7 @@
   },
   {
     "id": 285,
-    "name": "Legacy of Evolution",
+    "name": "Evolutionary Legacy",
     "nodes": [
       "During Hypersync mode, on hit, Sync skills inflict Damage +2% (Max. 3 stacks) and Cooldown -0.5s. Also, Hypersync mode returns 40% of its Core Energy cost when canceled.",
       "During Hypersync mode, on hit, Sync skills inflict Damage +4% (Max. 3 stacks) and Cooldown -0.5s. Also, Hypersync mode returns 40% of its Core Energy cost when canceled.",
@@ -685,7 +685,7 @@
   },
   {
     "id": 295,
-    "name": "Increases Mass",
+    "name": "Mass Increase",
     "nodes": [
       "Atk. Speed -10%, Atk. Power +4%.",
       "Atk. Speed -10%. Atk. Power +10%.",
@@ -757,11 +757,52 @@
   },
   {
     "id": 303,
-    "name": "Precision Dagger",
+    "name": "Precise Dagger",
     "nodes": [
       "Crit Rate +4%. Crit Damage -12%.",
       "Crit Rate +10%. Crit Damage -12%.",
       "Crit Rate +20%. Crit Damage -12%."
+    ]
+  },
+  {
+    "id": 500,
+    "name": "Atk. Power Reduction",
+    "type": "negative",
+    "nodes": [
+      "Atk. Power -2%",
+      "Atk. Power -4%",
+      "Atk. Power -6%"
+    ]
+
+  },
+  {
+    "id": 501,
+    "name": "Atk. Speed Reduction",
+    "type": "negative",
+    "nodes": [
+      "Atk. Speed -2%",
+      "Atk. Speed -4%",
+      "Atk. Speed -6%"
+    ]
+  },
+  {
+    "id": 502,
+    "name": "Defense Reduction",
+    "type": "negative",
+    "nodes": [
+      "Defense -5%",
+      "Defense -10%",
+      "Defense -15%"
+    ]
+  },
+  {
+    "id": 503,
+    "name": "Move Speed Reduction",
+    "type": "negative",
+    "nodes": [
+      "Move Speed -2%",
+      "Move Speed -4%",
+      "Move Speed -6%"
     ]
   }
 ]

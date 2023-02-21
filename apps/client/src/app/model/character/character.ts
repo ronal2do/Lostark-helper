@@ -8,6 +8,7 @@ export interface Character {
   class: LostarkClass;
   index?: number;
   isPrivate?: boolean;
+  isHide?: boolean;
   weeklyGold: boolean;
   note?: string;
   tickets: {
@@ -16,6 +17,8 @@ export interface Character {
     t2Cube: number;
     t3BossRush: number;
     t3Cube: number;
+    t3BossRushHard: number;
+    t3CubeHard: number;
     platinumFields: number;
   };
 }

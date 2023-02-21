@@ -18,7 +18,8 @@ export class RosterService extends FirestoreStorage<Roster> {
             return {
               $key: uid,
               characters: [],
-              trackedTasks: {}
+              trackedTasks: {},
+              showAllTasks: false,
             };
           }
           return roster;
@@ -52,7 +53,9 @@ export class RosterService extends FirestoreStorage<Roster> {
               t2BossRush: 0,
               t2Cube: 0,
               t3BossRush: 0,
+              t3BossRushHard: 0,
               t3Cube: 0,
+              t3CubeHard: 0,
               platinumFields: 0
             };
           }
@@ -61,7 +64,11 @@ export class RosterService extends FirestoreStorage<Roster> {
         if (!roster.trackedTasks) {
           roster.trackedTasks = {};
         }
-        if (shouldSave && isCurrentUser) {
+        if (roster.showAllTasks === undefined) {
+          shouldSave = true;
+          roster.showAllTasks = false;
+        }
+        if (shouldSave && isCurrentUser && roster.characters.length > 0) {
           return this.setOne(key, roster).pipe(
             mapTo(roster)
           );

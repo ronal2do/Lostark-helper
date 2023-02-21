@@ -12,11 +12,15 @@ import { EnergyService } from "../../../core/database/services/energy.service";
 import { TimeService } from "../../../core/time.service";
 import { CompletionService } from "../../../core/database/services/completion.service";
 import { TasksService } from "../../../core/database/services/tasks.service";
-import { isTaskDone } from "../../../core/is-task-done";
+import { isTaskAvailable, isTaskDone } from "../../../core/is-task-done";
 import { Roster } from "../../../model/roster";
 import { LocalStorageBehaviorSubject } from "../../../core/local-storage-behavior-subject";
 import { Character } from "../../../model/character/character";
 import { tickets } from "../../../data/tickets";
+
+export interface TaskCharacter extends Character{
+  done?: boolean
+}
 
 @Component({
   selector: "lostark-helper-checklist",
@@ -29,6 +33,7 @@ export class ChecklistComponent {
   public TaskScope = TaskScope;
 
   public rawRoster$ = this.rosterService.roster$;
+  public forceShowHiddenCharacter: boolean = false;
 
   public categoriesDisplay$ = new LocalStorageBehaviorSubject<{
     dailyCharacter: boolean,
@@ -84,18 +89,38 @@ export class ChecklistComponent {
     })
   );
 
+  public getCharactersList(characters: TaskCharacter[]): TaskCharacter[] {
+    if(this.forceShowHiddenCharacter){
+      return characters;
+    }
+    return characters.filter((character) => {
+      return !character.isHide && true
+    });
+  }
+
   public tableDisplay$ = combineLatest([
     this.rawRoster$,
     this.tasks$,
     this.completion$,
     this.lastDailyReset$,
     this.lastWeeklyReset$,
-    this.settings.settings$.pipe(pluck("lazytracking")),
+    this.settings.settings$.pipe(
+      map( settings => ({
+        lazytracking: settings.lazytracking,
+        hiddenOnCompletion: settings.hiddenOnCompletion
+      }))
+    ),
     this.energy$
   ]).pipe(
-    map(([roster, tasks, completion, dailyReset, weeklyReset, lazyTracking, energy]) => {
+    map(([roster, tasks, completion, dailyReset, weeklyReset, settings, energy]) => {
       const data = tasks
         .map(task => {
+          const lazyTracking = settings.lazytracking;
+          const available = isTaskAvailable(task)
+          const editDisabled = task.canEditDaysFilter === false;
+          const visible = available || editDisabled; // We always display tasks that can't be edited with "Not available today" flag
+          const forceDone = ( !available && visible ); // If task is not available but is visible, we marked it as done
+
           const completionData = roster.characters.map(character => {
             return {
               done: Math.min(isTaskDone(
@@ -111,14 +136,25 @@ export class ChecklistComponent {
               energy: getCompletionEntry(energy.data, character, task) || 0
             };
           });
+
+          const allDone = forceDone || completionData.every(
+            ({ doable, done, tracked }) => !tracked || !doable || done >= task.amount
+          );
+
           return {
             task,
             hasEnergy: ["Una", "Guardian", "Chaos"].some(n => task.label?.startsWith(n)),
             completion: completionData.map(row => row.done),
             energy: completionData.map(row => row.energy),
             completionData,
-            allDone: completionData.every(({ doable, done, tracked }) => !tracked || !doable || done >= task.amount || done === -1)
+            allDone,
+            visible,
+            available,
           };
+        })
+        .filter(({ visible, allDone }) => {
+          if ( allDone && settings.hiddenOnCompletion ) return false; // If task is done and we hide done tasks, we don't display it
+          return visible || roster.showAllTasks
         })
         .reduce((acc, row) => {
           const frequencyKey = row.task.frequency === TaskFrequency.DAILY ? "daily" : "weekly";
